@@ -6,17 +6,13 @@ import ssl
 from email.message import EmailMessage
 
 # Data imports
-import math
 import datetime
 import requests
 import copy
-import json
 
 # Database imports
 import psycopg2
 
-# Debug imports
-import time
 
 # Read configuration file
 config = configparser.ConfigParser()
