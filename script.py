@@ -31,6 +31,7 @@ getParameters = {
 data = None  # Define empty variable to be filled with JSON data later
 
 while True:
+    print("Getting data from beta.sam.gov API")
     r = requests.get(config["SAM"]["request_url"], params=getParameters)
     workingData = r.json()
     if data is None:
@@ -72,6 +73,7 @@ for email in emails:
     hits = ""
     cursor.execute(f"SELECT * FROM searches WHERE sendto=\'{email[0]}\'")
     searches = cursor.fetchall()
+    print("Performing searches for " + email)
     for search in searches:
         print(search)
         working_data = copy.deepcopy(data)
@@ -139,14 +141,14 @@ for email in emails:
     message["Subject"] = "Your Daily Samwat.ch Results"
     message["From"] = "Samwat.ch noreply@samwat.ch"
     message["To"] = email
-    # Include this in case people use bad clients
+    # Include this in case people use fpbad clients
     message.preamble = "Unfortunately, you need a MIME-aware mail reader to read Samwat.ch messages"
     # Turn these into plain/html MIMEText objects
     message.set_content(finalMessage, "html")
     # Create secure connection with server and send email
     context = ssl.create_default_context()
+    print("Sending email to " + email)
     with smtplib.SMTP_SSL(sender_server, 465, context=context) as server:
-        print(email)
         server.login(sender_email, sender_password)
         server.sendmail(
             sender_email, email, message.as_string()
