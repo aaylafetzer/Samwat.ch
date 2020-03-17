@@ -73,7 +73,7 @@ for email in emails:
     hits = ""
     cursor.execute(f"SELECT * FROM searches WHERE sendto=\'{email[0]}\'")
     searches = cursor.fetchall()
-    print("Performing searches for " + email)
+    print("Performing searches for " + email[0])
     for search in searches:
         print(search)
         working_data = copy.deepcopy(data)
@@ -147,7 +147,7 @@ for email in emails:
     message.set_content(finalMessage, "html")
     # Create secure connection with server and send email
     context = ssl.create_default_context()
-    print("Sending email to " + email)
+    print("Sending email to " + email[0])
     with smtplib.SMTP_SSL(sender_server, 465, context=context) as server:
         server.login(sender_email, sender_password)
         server.sendmail(
