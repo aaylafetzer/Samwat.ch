@@ -101,7 +101,12 @@ for email in emails:
                 elif search[i][0:2] == "c/":
                     label += fields[i] + " contains \"" + search[i][2:] + "\", "
                     # Test for items that contain the search
-                    working_data = [item for item in working_data if search[i][2:].lower() in item[fields[i]].lower()]
+                    try:
+                        working_data = [item for item in working_data if search[i][2:].lower() in item[fields[i]].lower()]
+                    except:
+                        working_data = "An Error Occurred While Preforming This Search"
+                        print(f" search[i][2:]: {search[i][2:]}")
+                        break
         # Add search label to message
         hits += search_template.replace("{Search}", label[:-2] + ":")
         # Add formatted results to message
@@ -116,8 +121,12 @@ for email in emails:
                 except KeyError:
                     naicsTitle = ""
 
-                if result["naicsCode"] is None:
-                    result["naicsCode"] = ""
+                if type(result) is not dict:  # STOP GIVING ME MALFORMED DATA YOU CRETINS
+                    continue
+
+                for value in result:
+                    if result[value] is None:
+                        result[value] = "None"
 
                 render = result_template\
                     .replace("{department}", result["department"])\
