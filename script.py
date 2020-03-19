@@ -45,6 +45,12 @@ while True:
         break
 
 data = [item for item in data["opportunitiesData"] if type(item) is dict]  # The rest of the info isn't useful
+
+for award in data:
+    for value in award:
+        if value is None:
+            award[value] = "None"
+
 # Set up email server
 # Create Email Message
 sender_email = config["EMAIL"]["sender_email"]
@@ -113,10 +119,6 @@ for email in emails:
                 if result["naicsCode"] is None:
                     result["naicsCode"] = ""
 
-                for value in result:
-                    if result[value] is None:
-                        result[value] = "None"
-
                 render = result_template\
                     .replace("{department}", result["department"])\
                     .replace("{subTier}", result["subTier"])\
@@ -141,7 +143,7 @@ for email in emails:
     message["Subject"] = "Your Daily Samwat.ch Results"
     message["From"] = "Samwat.ch noreply@samwat.ch"
     message["To"] = email
-    # Include this in case people use fpbad clients
+    # Include this in case people use bad clients
     message.preamble = "Unfortunately, you need a MIME-aware mail reader to read Samwat.ch messages"
     # Turn these into plain/html MIMEText objects
     message.set_content(finalMessage, "html")
