@@ -64,7 +64,7 @@ conn = psycopg2.connect(database="filters",
                         host=config['SQL']['endpoint_url'],
                         port=config['SQL']['port'])
 cursor = conn.cursor()
-cursor.execute("SELECT DISTINCT sendto FROM searches;")
+cursor.execute("SELECT DISTINCT sendto FROM filters;")
 emails = cursor.fetchall()
 
 # Load html elements
@@ -77,13 +77,13 @@ with open(config["TEMPLATES"]["search_label"], 'r') as file:
 
 for email in emails:
     hits = ""
-    cursor.execute(f"SELECT * FROM searches WHERE sendto=\'{email[0]}\'")
+    cursor.execute(f"SELECT * FROM filters WHERE sendto=\'{email[0]}\'")
     searches = cursor.fetchall()
     print("Performing searches for " + email[0])
     for search in searches:
         print(search)
         working_data = copy.deepcopy(data)
-        fields = ["id", "sendto", "department", "subTier", "office", "title", "basetype", "solicitationNumber",
+        fields = ["id", "sendto", "department", "subTier", "office", "title", "solicitationNumber",
                   "naicsCode", "classificiationCode"]
         # Build the search label while results are being processed
         label = "Awards where "
