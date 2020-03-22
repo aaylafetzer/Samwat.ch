@@ -146,6 +146,7 @@ for email in emails:
     finalMessage = message_template.replace("{Searches}", hits)\
         .replace("{Results}", "")\
         .replace("{year}", str(d.year)) \
+        .replace("{email}", email[0]) \
         .replace("\xc2\xa0", " ")\
         .replace("Â", " ")
     message = EmailMessage()
