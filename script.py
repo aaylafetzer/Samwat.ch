@@ -1,4 +1,5 @@
 import configparser
+import os
 
 # Email imports
 import smtplib
@@ -16,7 +17,7 @@ import psycopg2
 
 # Read configuration file
 config = configparser.ConfigParser()
-config.read("config.ini")
+config.read(os.getcwd() + "/config.ini")
 
 # Get Data from SAM.gov
 d = datetime.datetime.today()
@@ -68,11 +69,11 @@ cursor.execute("SELECT DISTINCT sendto FROM filters;")
 emails = cursor.fetchall()
 
 # Load html elements
-with open(config["TEMPLATES"]["results_template"], 'r') as file:
+with open(os.getcwd() + config["TEMPLATES"]["results_template"], 'r') as file:
     message_template = file.read()
-with open(config["TEMPLATES"]["result"], 'r') as file:
+with open(os.getcwd() + config["TEMPLATES"]["result"], 'r') as file:
     result_template = file.read()
-with open(config["TEMPLATES"]["search_label"], 'r') as file:
+with open(os.getcwd() + config["TEMPLATES"]["search_label"], 'r') as file:
     search_template = file.read()
 
 for email in emails:
