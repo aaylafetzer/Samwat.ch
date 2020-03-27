@@ -14,10 +14,11 @@ import copy
 # Database imports
 import psycopg2
 
+PATH = os.path.dirname(os.path.abspath(__file__))
 
 # Read configuration file
 config = configparser.ConfigParser()
-config.read(os.getcwd() + "/config.ini")
+config.read(PATH + "/config.ini")
 
 # Get Data from SAM.gov
 d = datetime.datetime.today()
@@ -69,11 +70,11 @@ cursor.execute("SELECT DISTINCT sendto FROM filters;")
 emails = cursor.fetchall()
 
 # Load html elements
-with open(os.getcwd() + config["TEMPLATES"]["results_template"], 'r') as file:
+with open(PATH + config["TEMPLATES"]["results_template"], 'r') as file:
     message_template = file.read()
-with open(os.getcwd() + config["TEMPLATES"]["result"], 'r') as file:
+with open(PATH + config["TEMPLATES"]["result"], 'r') as file:
     result_template = file.read()
-with open(os.getcwd() + config["TEMPLATES"]["search_label"], 'r') as file:
+with open(PATH + config["TEMPLATES"]["search_label"], 'r') as file:
     search_template = file.read()
 
 for email in emails:
