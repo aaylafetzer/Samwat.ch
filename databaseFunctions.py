@@ -5,12 +5,13 @@ import sqlite3
 import psycopg2
 
 
-def createMemoryDatabase():
+def createMemoryDatabase(path):
     """
     Creates a SQLite database in memory
     :return: connection, cursor
     """
-    conn = sqlite3.connect("database.db")
+    print("Making database at " + path)
+    conn = sqlite3.connect(path)
     return conn, conn.cursor()
 
 
@@ -28,11 +29,14 @@ def createMemoryTables(cursor):
                    "title text,"
                    "solicitationNumber text,"
                    "naicsCode text,"
-                   "classificationCode text);")
+                   "classificationCode text,"
+                   "uiLink text,"
+                   "baseType text);")
     # TODO: Awards
 
 
-def insertOpportunity(cursor, department, subTier, office, title, solicitationNumber, naicsCode, classificationCode):
+def insertOpportunity(cursor, department, subTier, office, title, solicitationNumber, naicsCode, classificationCode,
+                      uiLink, baseType):
     """
     Insert a new opportunity into the memory database
     :param cursor: Database cursor
@@ -43,12 +47,16 @@ def insertOpportunity(cursor, department, subTier, office, title, solicitationNu
     :param solicitationNumber: Value
     :param naicsCode: Value
     :param classificationCode: Value
+    :param uiLink: Value
+    :param baseType: Value
     :return: None
     """
     sql = "INSERT INTO opportunities " \
-          "(department, subtier, office, title, solicitationnumber, naicscode, classificationcode) VALUES " \
-          "(?, ?, ?, ?, ?, ?, ?);"
-    cursor.execute(sql, (department, subTier, office, title, solicitationNumber, naicsCode, classificationCode))
+          "(department, subtier, office, title, solicitationnumber, naicscode, classificationcode, uilink, basetype) " \
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
+    cursor.execute(sql,
+                   (department, subTier, office, title, solicitationNumber, naicsCode, classificationCode, uiLink,
+                    baseType))
 
 
 def searchOpportunities(cursor, search):
@@ -58,17 +66,15 @@ def searchOpportunities(cursor, search):
     :param search: tuple
     :return: Dict
     """
-    sql = f"SELECT * FROM opportunities WHERE " \
-          f"sendto = '{search[1]}' AND "
+    sql = f"SELECT * FROM opportunities WHERE "
     fields = ["id", "sendto", "department", "subTier", "office", "title", "solicitationNumber",
-              "naicsCode", "classificiationCode"]
+              "naicsCode", "classificationCode"]
     # Create search syntax
     for i in range(len(fields)):
         if i <= 1 or search[i] is None:  # Skip id, sendto, and anything empty
             continue
         else:
             switch = search[i][:2]  # Test if searching for LIKE or IS
-            print(switch)
             if switch == "c/":
                 sql += f"LOWER({fields[i]}) LIKE LOWER('%{search[i][2:]}%') AND "
             elif switch == "e/":
@@ -78,6 +84,7 @@ def searchOpportunities(cursor, search):
     # Remove trailing AND and add semicolon
     sql = sql[:-5] + ";"
     # Commit
+    print(sql)
     cursor.execute(sql)
     # Return response
     return cursor.fetchall()
@@ -129,6 +136,6 @@ def getFiltersByEmail(cursor, email):
     :param email: email address to search
     :return: Array
     """
-    cursor.execute(f"SELECT * FROM filters WHERE sendto=\'{email[0]}\'")
+    cursor.execute(f"SELECT * FROM filters WHERE sendto=\'{email}\'")
     filters = cursor.fetchall()
     return filters
