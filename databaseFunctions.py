@@ -19,8 +19,9 @@ def createMemoryTables(cursor):
     Creates a table in the memory database to hold opportunity data
     :return: None
     """
+    cursor.execute("DROP TABLE IF EXISTS opportunities;")
     cursor.execute("CREATE TABLE IF NOT EXISTS opportunities ("
-                   "id serial,"
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                    "department text,"
                    "subTier text,"
                    "office text,"
@@ -31,23 +32,23 @@ def createMemoryTables(cursor):
     # TODO: Awards
 
 
-def insertOpportunity(cursor, department, subtier, office, title, solicitationnumber, naicscode, classificationcode):
+def insertOpportunity(cursor, department, subTier, office, title, solicitationNumber, naicsCode, classificationCode):
     """
     Insert a new opportunity into the memory database
     :param cursor: Database cursor
     :param department: Value
-    :param subtier: Value
+    :param subTier: Value
     :param office: Value
     :param title: Value
-    :param solicitationnumber: Value
-    :param naicscode: Value
-    :param classificationcode: Value
+    :param solicitationNumber: Value
+    :param naicsCode: Value
+    :param classificationCode: Value
     :return: None
     """
     sql = "INSERT INTO opportunities " \
           "(department, subtier, office, title, solicitationnumber, naicscode, classificationcode) VALUES " \
           "(?, ?, ?, ?, ?, ?, ?);"
-    cursor.execute(sql, (department, subtier, office, title, solicitationnumber, naicscode, classificationcode))
+    cursor.execute(sql, (department, subTier, office, title, solicitationNumber, naicsCode, classificationCode))
 
 
 def searchOpportunities(cursor, search):

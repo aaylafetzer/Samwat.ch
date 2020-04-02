@@ -27,6 +27,7 @@ def getOpportunitiesData(url, key, date=datetime.datetime.today()):
         workingData = r.json()
         if data is None:
             data = workingData
+            break  # TODO: REMOVE FOR PRODUCTION
             continue  # Don't duplicate awards
         if not workingData["opportunitiesData"]:
             break  # No more data to manage
@@ -43,4 +44,5 @@ def getOpportunitiesData(url, key, date=datetime.datetime.today()):
                 award[value] = "None"
 
     # Return final output
+    print("Retrieved " + str(len(data["opportunitiesData"])) + " records")
     return data["opportunitiesData"]
