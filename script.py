@@ -12,8 +12,6 @@ import smtpFunctions
 
 import datetime
 
-print(datetime.datetime.now())
-
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 print(datetime.datetime.now())  # Print date to log file
