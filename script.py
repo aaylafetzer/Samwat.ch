@@ -16,6 +16,8 @@ import psycopg2
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 
+print(datetime.datetime.now())  # Print date to log file
+
 # Read configuration file
 config = configparser.ConfigParser()
 config.read(PATH + "/config.ini")
@@ -39,7 +41,7 @@ while True:
     if data is None:
         data = workingData
         continue  # Don't duplicate awards
-    if not workingData["opportunitiesData"]:
+    if "opportunitiesData" not in workingData:
         break  # No more data to manage
     else:
         data["opportunitiesData"].append(workingData["opportunitiesData"])
