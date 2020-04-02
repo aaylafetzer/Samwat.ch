@@ -16,6 +16,8 @@ print(datetime.datetime.now())
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
+print(datetime.datetime.now())  # Print date to log file
+
 # Read configuration file
 config = configparser.ConfigParser()
 config.read(FILE_PATH + "/config.ini")
