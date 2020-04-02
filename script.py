@@ -31,6 +31,11 @@ for opportunity in opportunitiesData:
                                         opportunity["solicitationNumber"],
                                         opportunity["naicsCode"],
                                         opportunity["classificationCode"])
+memCursor.execute("SELECT * FROM opportunities;")
+with open("out.txt", "w") as outfile:
+    x = memCursor.fetchall()
+    for line in x:
+        outfile.write(line)
 
 exit()
 # Set up email server
