@@ -59,6 +59,7 @@ noResultsTemplate = FILE_PATH + config["TEMPLATES"]["noResultsTemplate"]
 # Preform searches
 for address in [item[0] for item in emails]:  # Email addresses are returned as tuples with a single string
     finalMessageContent = []  # Contain all elements of the mail in an array for easier organization
+
     opportunityFilters = databaseFunctions.getFiltersByEmail(managedCursor, address)
     for currentFilter in opportunityFilters:
         print("-----")
@@ -76,6 +77,7 @@ for address in [item[0] for item in emails]:  # Email addresses are returned as 
                                                                                     config["NAICS"]["requestUrl"]))
         else:
             finalMessageContent.append(emailFunctions.noResults(noResultsTemplate))  # Append no results
+
     finalMessageHtml = emailFunctions.finalMessage(finalMessageTemplate, finalMessageContent, address)
     smtpFunctions.sendMail(
         config["EMAIL"]["senderEmail"],
