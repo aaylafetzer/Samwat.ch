@@ -23,15 +23,11 @@ def getOpportunitiesData(url, key):
 
     data = None  # Make a blank object to be populated with data later
 
-
-
     # Get data from API
     while True:
         print("Getting opportunities data from beta.sam.gov API")
         r = requests.get(url, params=getParameters)
         workingData = r.json()
-        with open("data/" + str(getParameters["limit"]) + ".json", "w") as out:
-            out.write(json.dumps(workingData))
         if data is None:
             data = workingData
             continue  # Don't duplicate awards
