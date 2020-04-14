@@ -1,9 +1,6 @@
 import configparser
 import os
 
-# Data manipulation imports
-# import requests
-
 # Import other script files
 import samFunctions
 import emailFunctions
