@@ -2,7 +2,7 @@ import configparser
 import os
 
 # Import other script files
-import samFunctions
+from fetch import samFunctions
 import emailFunctions
 import databaseFunctions
 import smtpFunctions
