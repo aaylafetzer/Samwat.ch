@@ -9,7 +9,3 @@ def getDisclosures(url):
     """
     data = requests.get(url).json()
     return data
-
-
-def getTickerValue(url, symbol, key):
-    pass
