@@ -111,11 +111,13 @@ def senateDisclosureResultTemplate(template, result, url, key):
                 text = text.replace("{priceStatus}", "green")
             elif priceChange < 0:
                 # Stock lost value
-                print("Oof")
                 text = text.replace("{priceStatus}", "red")
             text = text.replace("{priceChange}", f"{priceChange} ({percentChange}%)")
         except KeyError:
             pass
+    if result[3] == "--":
+        text = text.replace(" ${price} <span style=\"color:{priceStatus}\">{priceChange}</span>", "")
+        text = text.replace("<a href=\"https://finance.yahoo.com/quote/N/A\">N/A</a>", "N/A")
     return text
 
 
