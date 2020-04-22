@@ -44,18 +44,20 @@ if config["ACTIONS"]["sam"] == "True":
 # Get Senate Disclosures Data from senatestockwatcher
 if config["ACTIONS"]["senatedisclosures"] == "True":
     senateDisclosuresData = disclosuresFunctions.getDisclosures(config["SENATEDISCLOSURES"]["url"])
-    for disclosure in senateDisclosuresData:
-        databaseFunctions.insertSenateDisclosure(memCursor,
-                                                 disclosure["transaction_date"],
-                                                 disclosure["owner"],
-                                                 disclosure["ticker"],
-                                                 disclosure["asset_description"],
-                                                 disclosure["asset_type"],
-                                                 disclosure["type"],
-                                                 disclosure["amount"],
-                                                 disclosure["comment"],
-                                                 disclosure["senator"],
-                                                 disclosure["ptr_link"])
+    for senator in senateDisclosuresData:
+        senatorName = senator["first_name"] + " " + senator["last_name"]
+        for disclosure in senator["transactions"]:
+            databaseFunctions.insertSenateDisclosure(memCursor,
+                                                     disclosure["transaction_date"],
+                                                     disclosure["owner"],
+                                                     disclosure["ticker"],
+                                                     disclosure["asset_description"],
+                                                     disclosure["asset_type"],
+                                                     disclosure["type"],
+                                                     disclosure["amount"],
+                                                     disclosure["comment"],
+                                                     senatorName,
+                                                     senator["ptr_link"])
 
 
 # Create connection to pSQL database
@@ -111,7 +113,6 @@ for address in [item[0] for item in emails]:  # Email addresses are returned as 
                                                                                      disclosure,
                                                                                      config["STOCKS"]["url"],
                                                                                      config["STOCKS"]["apikey"]))
-            break
     # Create final message
     finalMessageHtml = emailFunctions.finalMessage(finalMessageTemplate, finalMessageContent, address)
     if config["ACTIONS"]["mail"] == "send":

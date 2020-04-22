@@ -2,3 +2,4 @@ requests
 configparser
 psycopg2-binary
 numpy
+xmltodict
