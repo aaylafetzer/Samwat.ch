@@ -20,7 +20,6 @@ def createMemoryTables(cursor):
     Creates a table in the memory database to hold opportunity data
     :return: None
     """
-    cursor.execute("DROP TABLE IF EXISTS opportunities;")
     cursor.execute("CREATE TABLE IF NOT EXISTS opportunities ("
                    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                    "department text,"
@@ -32,6 +31,18 @@ def createMemoryTables(cursor):
                    "classificationCode text,"
                    "uiLink text,"
                    "baseType text);")
+    cursor.execute("CREATE TABLE IF NOT EXISTS senateDisclosures ("
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                   "transaction_date text,"
+                   "owner text,"
+                   "ticker text,"
+                   "asset_description text,"
+                   "asset_type text,"
+                   "transaction_type text,"
+                   "amount text,"
+                   "comment text,"
+                   "senator text,"
+                   "ptr_link text);")
     # TODO: Awards
 
 
@@ -59,6 +70,27 @@ def insertOpportunity(cursor, department, subTier, office, title, solicitationNu
                     baseType))
 
 
+def createSearch(sql, search, fields):
+    # Create search syntax
+    values = ()
+    for i in range(len(fields)):
+        if i <= 1 or search[i] is None:  # Skip id, sendto, and anything empty
+            continue
+        else:
+            switch = search[i][:2]  # Test if searching for LIKE or IS
+            if switch == "c/":
+                values += (search[i][2:],)
+                sql += f"LOWER({fields[i]}) LIKE '%' || LOWER(?) || '%' AND "
+            elif switch == "e/":
+                values += (search[i][2:],)
+                sql += f"LOWER({fields[i]}) = LOWER(?) AND "
+            else:
+                print(f"Error processesing search: {search[0]}")
+    # Remove trailing AND and add semicolon
+    sql = sql[:-5] + ";"
+    return sql, values
+
+
 def searchOpportunities(cursor, search):
     """
     Search for matching opportunities in the memory database
@@ -69,25 +101,51 @@ def searchOpportunities(cursor, search):
     sql = f"SELECT * FROM opportunities WHERE "
     fields = ["id", "sendto", "department", "subTier", "office", "title", "solicitationNumber",
               "naicsCode", "classificationCode"]
-    # Create search syntax
-    for i in range(len(fields)):
-        if i <= 1 or search[i] is None:  # Skip id, sendto, and anything empty
-            continue
-        else:
-            switch = search[i][:2]  # Test if searching for LIKE or IS
-            if switch == "c/":
-                sql += f"LOWER({fields[i]}) LIKE LOWER('%{search[i][2:]}%') AND "
-            elif switch == "e/":
-                sql += f"LOWER({fields[i]}) = LOWER('{search[i][2:]}') AND "
-            else:
-                print(f"Error processesing search: {search[0]}")
-    # Remove trailing AND and add semicolon
-    sql = sql[:-5] + ";"
+    sql, values = createSearch(sql, search, fields)
     # Commit
-    print(sql)
-    cursor.execute(sql)
+    print(sql, values)
+    cursor.execute(sql, values)
     # Return response
     return cursor.fetchall()
+
+
+def searchSenateDisclosures(cursor, search):
+    sql = f"SELECT * FROM senateDisclosures WHERE "
+    fields = ["id", "sendto", "transaction_date", "owner", "ticker", "asset_type", "transaction_type", "amount",
+              "comment", "senator", "ptr_link"]
+    sql, values = createSearch(sql, search, fields)
+    # Commit
+    print(sql, values)
+    cursor.execute(sql, values)
+    # Return response
+    return cursor.fetchall()
+
+
+def insertSenateDisclosure(cursor, transaction_date, owner, ticker, asset_description, asset_type, transaction_type, amount, comment,
+                           senator, ptr_link):
+    """
+    Insert a new senate disclosure transaction into the memory database
+    :param cursor: Database cursor
+    :param transaction_date: Value
+    :param owner: Value
+    :param ticker: Value
+    :param asset_description: Value
+    :param asset_type: Value
+    :param transaction_type: Value
+    :param amount: Value
+    :param comment: Value
+    :param senator: Value
+    :param ptr_link: Value
+    :return: None
+    """
+    sql = "INSERT INTO senateDisclosures " \
+          "(transaction_date, owner, ticker, asset_description, asset_type, transaction_type, amount, comment, " \
+          "senator, ptr_link) " \
+          "VALUES (?,?,?,?,?,?,?,?,?,?)"
+    cursor.execute(
+        sql,
+        (transaction_date, owner, ticker, asset_description, asset_type, transaction_type, amount, comment, senator, ptr_link)
+    )
 
 
 def insertAward():
@@ -129,13 +187,19 @@ def getEmailAddresses(cursor):
     return emails
 
 
-def getFiltersByEmail(cursor, email):
+def getOpportunityFiltersByEmail(cursor, email):
     """
     Returns a list of filters for a given email address
     :param cursor: connection cursor
     :param email: email address to search
     :return: Array
     """
-    cursor.execute(f"SELECT * FROM filters WHERE sendto=\'{email}\'")
+    cursor.execute(f"SELECT * FROM opportunityFilters WHERE sendto='{email}';")
+    filters = cursor.fetchall()
+    return filters
+
+
+def getSenateDisclosureFiltersByEmail(cursor, email):
+    cursor.execute(f"SELECT * FROM senateDisclosureFilters WHERE sendto='{email}';")
     filters = cursor.fetchall()
     return filters
