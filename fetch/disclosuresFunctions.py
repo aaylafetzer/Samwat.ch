@@ -25,6 +25,3 @@ def getDisclosures(url):
     # Get data from latest report
     latest = requests.get(url + filenames[-1]).json()
     return latest
-
-
-print(getDisclosures("https://senate-stock-watcher-data.s3-us-west-2.amazonaws.com/"))
