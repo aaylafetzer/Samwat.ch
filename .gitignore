@@ -132,4 +132,6 @@ dmypy.json
 testdata/*
 
 .idea/*
-/messages/.idea/*
+/mailTemplates/.idea/*
+/database.db
+mail/
