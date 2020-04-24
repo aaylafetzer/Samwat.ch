@@ -1,0 +1,12 @@
+# Deny access to .htaccess
+<Files .htaccess>
+Order allow,deny
+Deny from all
+</Files>
+# Deny access to credentials.txt
+<Files credentials.txt>
+Order allow,deny
+Deny from all
+</Files>
+# Disable directory browsing
+Options -Indexes
