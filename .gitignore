@@ -136,3 +136,4 @@ dmypy.json
 # Fuck off, IntelliJ
 .idea/
 .idea/*
+/python/mail/
