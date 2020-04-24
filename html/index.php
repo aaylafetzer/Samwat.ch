@@ -327,7 +327,7 @@
     </div>
     <footer class="footer">
         <div class="content has-text-centered">
-            <p>Built by Aayla Fetzer. Source code available on <a href="https://gitlab.com/apozho/samwat.chfrontend">Gitlab</a>.</p>
+            <p>Built by Aayla Fetzer. Source code available on <a href="https://gitlab.com/apozho/samwat.ch">Gitlab</a>.</p>
         </div>
     </footer>
     </body>
