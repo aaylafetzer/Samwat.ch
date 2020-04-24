@@ -132,3 +132,7 @@ dmypy.json
 
 /html/credentials.txt
 /python/config.ini
+
+# Fuck off, IntelliJ
+.idea/
+.idea/*
