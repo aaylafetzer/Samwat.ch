@@ -107,12 +107,15 @@ for address in [item[0] for item in emails]:  # Email addresses are returned as 
                                                                               currentFilter))
         senateDisclosuresSearchResults = databaseFunctions.searchSenateDisclosures(memCursor, currentFilter)
         print("Found " + str(len(senateDisclosuresSearchResults)) + " result(s).")
-        for disclosure in senateDisclosuresSearchResults:
-            # Append results
-            finalMessageContent.append(emailFunctions.senateDisclosureResultTemplate(senateDisclosureResultTemplate,
-                                                                                     disclosure,
-                                                                                     config["STOCKS"]["url"],
-                                                                                     config["STOCKS"]["apikey"]))
+        if len(senateDisclosuresSearchResults) is not 0:
+            for disclosure in senateDisclosuresSearchResults:
+                # Append results
+                finalMessageContent.append(emailFunctions.senateDisclosureResultTemplate(senateDisclosureResultTemplate,
+                                                                                         disclosure,
+                                                                                         config["STOCKS"]["url"],
+                                                                                         config["STOCKS"]["apikey"]))
+        else:
+            finalMessageContent.append(emailFunctions.noResults(noResultsTemplate))  # Append no results
     # Create final message
     finalMessageHtml = emailFunctions.finalMessage(finalMessageTemplate, finalMessageContent, address)
     if config["ACTIONS"]["mail"] == "send":
