@@ -121,8 +121,8 @@ def searchSenateDisclosures(cursor, search):
     return cursor.fetchall()
 
 
-def insertSenateDisclosure(cursor, transaction_date, owner, ticker, asset_description, asset_type, transaction_type, amount, comment,
-                           senator, ptr_link):
+def insertSenateDisclosure(cursor, transaction_date, owner, ticker, asset_description, asset_type, transaction_type,
+                           amount, comment, senator, ptr_link):
     """
     Insert a new senate disclosure transaction into the memory database
     :param cursor: Database cursor
@@ -144,7 +144,8 @@ def insertSenateDisclosure(cursor, transaction_date, owner, ticker, asset_descri
           "VALUES (?,?,?,?,?,?,?,?,?,?)"
     cursor.execute(
         sql,
-        (transaction_date, owner, ticker, asset_description, asset_type, transaction_type, amount, comment, senator, ptr_link)
+        (transaction_date, owner, ticker, asset_description, asset_type, transaction_type, amount, comment, senator,
+         ptr_link)
     )
 
 

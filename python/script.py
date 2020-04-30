@@ -4,6 +4,8 @@ import os
 # Import other script files
 from fetch import samFunctions
 from fetch import disclosuresFunctions
+from fetch import congressFunctions
+
 import emailFunctions
 import databaseFunctions
 import smtpFunctions
